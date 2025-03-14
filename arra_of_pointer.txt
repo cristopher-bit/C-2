@@ -1,0 +1,648 @@
+Account Class
+Includes static data member for generating account numbers, deposit/withdraw functionality, and a menu-driven system.
+
+Account.h
+cpp
+Copy
+Edit
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Account {
+private:
+    static int accountCounter; 
+    int accNo;
+    char name[50];
+    double balance;
+
+public:
+    Account();
+    Account(const char*, double);
+
+    void Accept();
+    void Display();
+    void Deposit(double);
+    void Withdraw(double);
+    int getAccNo() const;
+
+    static int GetTotalAccounts();
+};
+
+#endif // ACCOUNT_H
+Account.cpp
+cpp
+Copy
+Edit
+#include "Account.h"
+
+int Account::accountCounter = 1000;
+
+Account::Account() {
+    accNo = ++accountCounter;
+    strcpy(name, "Unknown");
+    balance = 0.0;
+    cout << "Account Created: " << accNo << endl;
+}
+
+Account::Account(const char* n, double b) {
+    accNo = ++accountCounter;
+    strcpy(name, n);
+    balance = b;
+    cout << "Account Created: " << accNo << endl;
+}
+
+void Account::Accept() {
+    cout << "Enter Name: ";
+    cin >> name;
+    cout << "Enter Initial Balance: ";
+    cin >> balance;
+    accNo = ++accountCounter;
+}
+
+void Account::Display() {
+    cout << "\nAccount Number: " << accNo 
+         << "\nName: " << name 
+         << "\nBalance: " << balance << endl;
+}
+
+void Account::Deposit(double amount) {
+    if (amount > 0) {
+        balance += amount;
+        cout << "Amount Deposited! New Balance: " << balance << endl;
+    } else {
+        cout << "Invalid Deposit Amount!" << endl;
+    }
+}
+
+void Account::Withdraw(double amount) {
+    if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        cout << "Amount Withdrawn! New Balance: " << balance << endl;
+    } else {
+        cout << "Invalid Withdrawal Amount or Insufficient Balance!" << endl;
+    }
+}
+
+int Account::getAccNo() const {
+    return accNo;
+}
+
+int Account::GetTotalAccounts() {
+    return accountCounter - 1000;
+}
+main.cpp
+cpp
+Copy
+Edit
+#include "Account.h"
+
+void Menu() {
+    int choice, n = 0;
+    Account* accounts = nullptr;
+
+    do {
+        cout << "\n===== BANK MENU =====\n";
+        cout << "1. Open Account\n";
+        cout << "2. Display All Accounts\n";
+        cout << "3. Deposit Money\n";
+        cout << "4. Withdraw Money\n";
+        cout << "5. Total Accounts Created\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                cout << "Enter number of accounts to open: ";
+                int newAccounts;
+                cin >> newAccounts;
+
+                Account* temp = new Account[n + newAccounts];
+                for (int i = 0; i < n; i++) {
+                    temp[i] = accounts[i];
+                }
+
+                delete[] accounts;
+                accounts = temp;
+
+                for (int i = n; i < n + newAccounts; i++) {
+                    accounts[i].Accept();
+                }
+
+                n += newAccounts;
+                break;
+            }
+            case 2: {
+                if (n == 0) {
+                    cout << "No Accounts Available!" << endl;
+                } else {
+                    for (int i = 0; i < n; i++) {
+                        accounts[i].Display();
+                    }
+                }
+                break;
+            }
+            case 3: {
+                int accNo;
+                double amount;
+                cout << "Enter Account Number: ";
+                cin >> accNo;
+
+                for (int i = 0; i < n; i++) {
+                    if (accounts[i].getAccNo() == accNo) {
+                        cout << "Enter Amount to Deposit: ";
+                        cin >> amount;
+                        accounts[i].Deposit(amount);
+                        break;
+                    }
+                }
+                break;
+            }
+            case 4: {
+                int accNo;
+                double amount;
+                cout << "Enter Account Number: ";
+                cin >> accNo;
+
+                for (int i = 0; i < n; i++) {
+                    if (accounts[i].getAccNo() == accNo) {
+                        cout << "Enter Amount to Withdraw: ";
+                        cin >> amount;
+                        accounts[i].Withdraw(amount);
+                        break;
+                    }
+                }
+                break;
+            }
+            case 5:
+                cout << "Total Accounts Created: " << Account::GetTotalAccounts() << endl;
+                break;
+            case 6:
+                cout << "Exiting the program. Thank you!\n";
+                delete[] accounts;
+                return;
+            default:
+                cout << "Invalid choice! Please enter a valid option.\n";
+        }
+    } while (true);
+}
+
+int main() {
+    Menu();
+    return 0;
+}
+2️⃣ Student Class
+Student.h
+cpp
+Copy
+Edit
+#ifndef STUDENT_H
+#define STUDENT_H
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Student {
+private:
+    static int studentCount;
+    int rollNo;
+    char name[50];
+
+public:
+    Student();
+    Student(const char*);
+    void Accept();
+    void Display();
+    static int GetTotalStudents();
+};
+
+#endif
+Student.cpp
+cpp
+Copy
+Edit
+#include "Student.h"
+
+int Student::studentCount = 0;
+
+Student::Student() {
+    rollNo = ++studentCount;
+    strcpy(name, "Unknown");
+}
+
+Student::Student(const char* n) {
+    rollNo = ++studentCount;
+    strcpy(name, n);
+}
+
+void Student::Accept() {
+    cout << "Enter Student Name: ";
+    cin >> name;
+    rollNo = ++studentCount;
+}
+
+void Student::Display() {
+    cout << "Roll No: " << rollNo << ", Name: " << name << endl;
+}
+
+int Student::GetTotalStudents() {
+    return studentCount;
+}
+3️⃣ Complex Class
+Complex.h
+cpp
+Copy
+Edit
+#ifndef COMPLEX_H
+#define COMPLEX_H
+
+#include <iostream>
+using namespace std;
+
+class Complex {
+private:
+    static int objectCount;
+    float real, imag;
+
+public:
+    Complex();
+    Complex(float, float);
+    void Display();
+    static int GetTotalObjects();
+};
+
+#endif
+Complex.cpp
+cpp
+Copy
+Edit
+#include "Complex.h"
+
+int Complex::objectCount = 0;
+
+Complex::Complex() : real(0), imag(0) {
+    objectCount++;
+}
+
+Complex::Complex(float r, float i) : real(r), imag(i) {
+    objectCount++;
+}
+
+void Complex::Display() {
+    cout << "Complex Number: " << real << " + " << imag << "i" << endl;
+}
+
+int Complex::GetTotalObjects() {
+    return objectCount;
+}
+4️⃣ Employee Class
+Employee.h
+cpp
+Copy
+Edit
+#ifndef EMPLOYEE_H
+#define EMPLOYEE_H
+
+#include <iostream>
+#include <cstring
+
+
+
+
+
+You said:
+Use references to write swap function.
+ChatGPT said:
+Here’s a swap function using references in C++:
+
+Swap Function Using References
+cpp
+Copy
+Edit
+#include <iostream>
+using namespace std;
+
+void swapNumbers(int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+int main() {
+    int x, y;
+    cout << "Enter two numbers: ";
+    cin >> x >> y;
+
+    cout << "Before swapping: x = " << x << ", y = " << y << endl;
+
+    swapNumbers(x, y);
+
+    cout << "After swapping: x = " << x << ", y = " << y << endl;
+
+    return 0;
+}
+Explanation
+The function swapNumbers(int &a, int &b) takes two integers by reference.
+Any modifications made inside the function directly affect the original variables.
+No need to return values, as changes persist in the caller’s scope.
+Would you like a version without a third variable? 🚀
+
+
+
+
+
+
+You said:
+Use array of pointers in account assignment.
+ChatGPT said:
+Memory updated
+Here’s the Account class implementation using an array of pointers.
+
+1️⃣ Account.h (Header File)
+cpp
+Copy
+Edit
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Account {
+private:
+    static int accountCounter;
+    int accNo;
+    char name[50];
+    double balance;
+
+public:
+    Account();
+    Account(const char*, double);
+    
+    void Accept();
+    void Display();
+    void Deposit(double);
+    void Withdraw(double);
+    int getAccNo() const;
+
+    static int GetTotalAccounts();
+};
+
+#endif // ACCOUNT_H
+2️⃣ Account.cpp (Implementation File)
+cpp
+Copy
+Edit
+#include "Account.h"
+
+int Account::accountCounter = 1000;
+
+Account::Account() {
+    accNo = ++accountCounter;
+    strcpy(name, "Unknown");
+    balance = 0.0;
+    cout << "Account Created: " << accNo << endl;
+}
+
+Account::Account(const char* n, double b) {
+    accNo = ++accountCounter;
+    strcpy(name, n);
+    balance = b;
+    cout << "Account Created: " << accNo << endl;
+}
+
+void Account::Accept() {
+    cout << "Enter Name: ";
+    cin >> name;
+    cout << "Enter Initial Balance: ";
+    cin >> balance;
+    accNo = ++accountCounter;
+}
+
+void Account::Display() {
+    cout << "\nAccount Number: " << accNo 
+         << "\nName: " << name 
+         << "\nBalance: " << balance << endl;
+}
+
+void Account::Deposit(double amount) {
+    if (amount > 0) {
+        balance += amount;
+        cout << "Amount Deposited! New Balance: " << balance << endl;
+    } else {
+        cout << "Invalid Deposit Amount!" << endl;
+    }
+}
+
+void Account::Withdraw(double amount) {
+    if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        cout << "Amount Withdrawn! New Balance: " << balance << endl;
+    } else {
+        cout << "Invalid Withdrawal Amount or Insufficient Balance!" << endl;
+    }
+}
+
+int Account::getAccNo() const {
+    return accNo;
+}
+
+int Account::GetTotalAccounts() {
+    return accountCounter - 1000;
+}
+3️⃣ main.cpp (Menu-Driven Program with Array of Pointers)
+cpp
+Copy
+Edit
+#include "Account.h"
+
+void Menu() {
+    int choice, n = 0;
+    Account** accounts = nullptr;
+
+    do {
+        cout << "\n===== BANK MENU =====\n";
+        cout << "1. Open Account\n";
+        cout << "2. Display All Accounts\n";
+        cout << "3. Deposit Money\n";
+        cout << "4. Withdraw Money\n";
+        cout << "5. Total Accounts Created\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                cout << "Enter number of accounts to open: ";
+                int newAccounts;
+                cin >> newAccounts;
+
+                Account** temp = new Account*[n + newAccounts];
+                for (int i = 0; i < n; i++) {
+                    temp[i] = accounts[i];
+                }
+
+                delete[] accounts;
+                accounts = temp;
+
+                for (int i = n; i < n + newAccounts; i++) {
+                    accounts[i] = new Account();
+                    accounts[i]->Accept();
+                }
+
+                n += newAccounts;
+                break;
+            }
+            case 2: {
+                if (n == 0) {
+                    cout << "No Accounts Available!" << endl;
+                } else {
+                    for (int i = 0; i < n; i++) {
+                        accounts[i]->Display();
+                    }
+                }
+                break;
+            }
+            case 3: {
+                int accNo;
+                double amount;
+                cout << "Enter Account Number: ";
+                cin >> accNo;
+
+                for (int i = 0; i < n; i++) {
+                    if (accounts[i]->getAccNo() == accNo) {
+                        cout << "Enter Amount to Deposit: ";
+                        cin >> amount;
+                        accounts[i]->Deposit(amount);
+                        break;
+                    }
+                }
+                break;
+            }
+            case 4: {
+                int accNo;
+                double amount;
+                cout << "Enter Account Number: ";
+                cin >> accNo;
+
+                for (int i = 0; i < n; i++) {
+                    if (accounts[i]->getAccNo() == accNo) {
+                        cout << "Enter Amount to Withdraw: ";
+                        cin >> amount;
+                        accounts[i]->Withdraw(amount);
+                        break;
+                    }
+                }
+                break;
+            }
+            case 5:
+                cout << "Total Accounts Created: " << Account::GetTotalAccounts() << endl;
+                break;
+            case 6:
+                cout << "Exiting the program. Thank you!\n";
+                for (int i = 0; i < n; i++) {
+                    delete accounts[i];
+                }
+                delete[] accounts;
+                return;
+            default:
+                cout << "Invalid choice! Please enter a valid option.\n";
+        }
+    } while (true);
+}
+
+int main() {
+    Menu();
+    return 0;
+}
+🚀 Features
+✅ Uses array of pointers to dynamically allocate Account objects.
+✅ new and delete operators handle memory allocation & deallocation.
+✅ Menu-driven approach with Open, Display, Deposit, Withdraw options.
+✅ Static data member auto-generates unique account numbers.
+
+Would you like any enhancements? 🚀
+
+
+
+
+
+
+You said:
+where array of pointers in account assignment used
+ChatGPT said:
+In the main.cpp file, we use an array of pointers to store dynamically allocated Account objects. Let's break it down.
+
+Array of Pointers in main.cpp
+cpp
+Copy
+Edit
+Account** accounts = nullptr;  // Pointer to an array of Account pointers
+int n = 0;  // Number of accounts
+Account** accounts is a pointer to an array of Account pointers.
+Initially, it's set to nullptr since no accounts exist.
+When Opening an Account (Case 1 in switch statement):
+cpp
+Copy
+Edit
+int newAccounts;
+cout << "Enter number of accounts to open: ";
+cin >> newAccounts;
+
+Account** temp = new Account*[n + newAccounts];  // Create a new larger array
+for (int i = 0; i < n; i++) {
+    temp[i] = accounts[i];  // Copy old data
+}
+
+delete[] accounts;  // Free old memory
+accounts = temp;    // Assign new memory
+
+for (int i = n; i < n + newAccounts; i++) {
+    accounts[i] = new Account();  // Dynamically allocate new objects
+    accounts[i]->Accept();
+}
+
+n += newAccounts;  // Update the count
+A new array of pointers is created, large enough to hold new accounts.
+Existing account pointers are copied to the new array.
+Old memory is freed (delete[] accounts), and accounts now points to the new array.
+New accounts are dynamically allocated (new Account()) and stored in the array.
+When Displaying Accounts (Case 2):
+cpp
+Copy
+Edit
+for (int i = 0; i < n; i++) {
+    accounts[i]->Display();  // Access objects via pointers
+}
+The array of pointers is used to call functions on each Account object.
+When Depositing or Withdrawing (Cases 3 & 4):
+cpp
+Copy
+Edit
+for (int i = 0; i < n; i++) {
+    if (accounts[i]->getAccNo() == accNo) {  // Find account by number
+        accounts[i]->Deposit(amount);  // Use pointer to call method
+        break;
+    }
+}
+The array of pointers is used to find the right account and modify its data.
+When Exiting (Case 6):
+cpp
+Copy
+Edit
+for (int i = 0; i < n; i++) {
+    delete accounts[i];  // Delete dynamically allocated objects
+}
+delete[] accounts;  // Delete array of pointers
+Each allocated Account object is deleted to prevent memory leaks.
+Finally, the array of pointers itself is deleted.
+💡 Summary
+✅ Dynamic array of pointers is used to store Account objects.
+✅ Allows resizing the array dynamically as new accounts are added.
+✅ Efficient memory management using new and delete.
