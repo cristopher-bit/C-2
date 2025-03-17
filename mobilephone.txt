@@ -1,0 +1,230 @@
+1. MobilePhone.h (Class Declaration)
+cpp
+Copy
+Edit
+#ifndef MOBILEPHONE_H
+#define MOBILEPHONE_H
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+
+class MobilePhone {
+private:
+    int serialNo;
+    std::string modelNo;
+    std::string brandName;
+    double price;
+
+public:
+    MobilePhone(); // Default Constructor
+    MobilePhone(int serial, std::string model, std::string brand, double price);
+
+    void display() const;
+    int getSerialNo() const { return serialNo; }
+    double getPrice() const { return price; }
+
+    // File Operations
+    void writeToFile(std::ofstream &outFile) const;
+    void readFromFile(std::ifstream &inFile);
+
+    // Comparison for sorting
+    static bool compareByPrice(const MobilePhone &a, const MobilePhone &b);
+};
+
+#endif
+2. MobilePhone.cpp (Class Implementation)
+cpp
+Copy
+Edit
+#include "MobilePhone.h"
+
+using namespace std;
+
+MobilePhone::MobilePhone() : serialNo(0), modelNo(""), brandName(""), price(0.0) {}
+
+MobilePhone::MobilePhone(int serial, string model, string brand, double cost)
+    : serialNo(serial), modelNo(model), brandName(brand), price(cost) {}
+
+void MobilePhone::display() const {
+    cout << "Serial No: " << serialNo << ", Model: " << modelNo
+         << ", Brand: " << brandName << ", Price: $" << price << endl;
+}
+
+void MobilePhone::writeToFile(ofstream &outFile) const {
+    outFile << serialNo << " " << modelNo << " " << brandName << " " << price << endl;
+}
+
+void MobilePhone::readFromFile(ifstream &inFile) {
+    inFile >> serialNo >> modelNo >> brandName >> price;
+}
+
+bool MobilePhone::compareByPrice(const MobilePhone &a, const MobilePhone &b) {
+    return a.price < b.price;
+}
+3. main.cpp (Menu-Driven Program)
+cpp
+Copy
+Edit
+#include "MobilePhone.h"
+
+using namespace std;
+
+const string FILE_NAME = "mobilephones.txt";
+
+// Function to add a new MobilePhone to file
+void addMobilePhone() {
+    ofstream outFile(FILE_NAME, ios::app);
+    if (!outFile) {
+        cout << "Error opening file for writing.\n";
+        return;
+    }
+
+    int serial;
+    string model, brand;
+    double price;
+    
+    cout << "Enter Serial No: ";
+    cin >> serial;
+    cout << "Enter Model No: ";
+    cin >> model;
+    cout << "Enter Brand Name: ";
+    cin >> brand;
+    cout << "Enter Price: ";
+    cin >> price;
+
+    MobilePhone phone(serial, model, brand, price);
+    phone.writeToFile(outFile);
+    outFile.close();
+
+    cout << "Mobile phone added successfully!\n";
+}
+
+// Function to read all mobile phones and store in an array
+void readMobilePhones(vector<MobilePhone> &phones) {
+    ifstream inFile(FILE_NAME);
+    if (!inFile) {
+        cout << "Error opening file for reading.\n";
+        return;
+    }
+
+    MobilePhone phone;
+    while (inFile) {
+        phone.readFromFile(inFile);
+        if (inFile) phones.push_back(phone);
+    }
+
+    inFile.close();
+}
+
+// Function to display mobile phones
+void displayMobilePhones(const vector<MobilePhone> &phones) {
+    if (phones.empty()) {
+        cout << "No mobile phones available.\n";
+        return;
+    }
+
+    cout << "\nMobile Phones List:\n";
+    for (const auto &phone : phones) {
+        phone.display();
+    }
+}
+
+// Function to read and display mobile phones sorted by price
+void displaySortedByPrice() {
+    vector<MobilePhone> phones;
+    readMobilePhones(phones);
+
+    if (phones.empty()) return;
+
+    sort(phones.begin(), phones.end(), MobilePhone::compareByPrice);
+
+    cout << "\nMobile Phones Sorted by Price:\n";
+    displayMobilePhones(phones);
+}
+
+// Main menu-driven function
+int main() {
+    vector<MobilePhone> phones;
+    int choice;
+
+    do {
+        cout << "\n--- Mobile Phone Management ---\n";
+        cout << "1. Add Mobile Phone\n";
+        cout << "2. Read Mobile Phones\n";
+        cout << "3. Display Mobile Phones Sorted by Price\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addMobilePhone();
+                break;
+            case 2:
+                phones.clear();
+                readMobilePhones(phones);
+                displayMobilePhones(phones);
+                break;
+            case 3:
+                displaySortedByPrice();
+                break;
+            case 4:
+                cout << "Exiting program...\n";
+                break;
+            default:
+                cout << "Invalid choice! Try again.\n";
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+
+1. MobilePhone.h (Header File) – Class Declaration
+Purpose: Defines the MobilePhone class structure.
+Contains:
+Header Guard (#ifndef ... #define ...) → Prevents multiple inclusions.
+Libraries (iostream, fstream, vector, algorithm) → Required for file handling, sorting, and storage.
+Private Data Members:
+serialNo → Unique mobile phone ID.
+modelNo → Model number (e.g., "iPhone13").
+brandName → Brand (e.g., "Apple").
+price → Mobile phone cost.
+Constructors:
+Default Constructor → Initializes empty values.
+Parameterized Constructor → Initializes with user data.
+Public Methods:
+display() → Prints mobile phone details.
+writeToFile(std::ofstream&) → Saves object data to a file.
+readFromFile(std::ifstream&) → Reads object data from a file.
+compareByPrice(const MobilePhone&, const MobilePhone&) → Sorting function.
+2. MobilePhone.cpp (Class Implementation) – Class Definition
+Purpose: Implements all member functions declared in MobilePhone.h.
+Contains:
+Constructor Definitions:
+Default Constructor → Initializes values to 0 or empty strings.
+Parameterized Constructor → Assigns input values to class members.
+display() Method → Prints the mobile phone’s details in a readable format.
+writeToFile() Method → Saves object data (serialNo, modelNo, brandName, price) into a file.
+readFromFile() Method → Reads stored mobile phone data from a file.
+compareByPrice() Static Method → Used for sorting mobile phones in ascending order of price.
+3. main.cpp (Menu-Driven Program) – User Interface
+Purpose: Provides a menu-based system to interact with the MobilePhone class.
+Menu Options:
+Add Mobile Phone to File
+Takes input from the user.
+Creates a MobilePhone object.
+Saves data to "mobilephones.txt".
+Read All Mobile Phones from File
+Opens "mobilephones.txt".
+Reads all MobilePhone objects.
+Stores them in a vector.
+Displays them.
+Read & Display Mobile Phones Sorted by Price
+Reads objects from the file.
+Sorts them using compareByPrice().
+Displays the sorted list.
+Exit Program
+Terminates execution.
