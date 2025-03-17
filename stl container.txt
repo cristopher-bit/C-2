@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <list>
+#include <set>
+#include <map>
+
+using namespace std;
+
+int main() {
+    // 1. VECTOR: Managing a collection of students' names
+    vector<string> students = {"Alice", "Bob", "Charlie", "David"};
+    cout << "Student List: ";
+    for (auto it = students.begin(); it != students.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    // 2. STACK: Undo operation in a text editor
+    stack<string> undoStack;
+    undoStack.push("Typed: Hello");
+    undoStack.push("Typed: World");
+    undoStack.push("Deleted: World");
+    cout << "Undo Operations: ";
+    while (!undoStack.empty()) {
+        cout << undoStack.top() << " | ";
+        undoStack.pop();
+    }
+    cout << endl;
+
+    // 3. LIST: Task management system
+    list<string> tasks = {"Design UI", "Develop Backend", "Write Documentation"};
+    cout << "Task List: ";
+    for (auto it = tasks.begin(); it != tasks.end(); ++it) {
+        cout << *it << " -> ";
+    }
+    cout << "Done" << endl;
+
+    // 4. SET: Unique visitor tracking
+    set<string> visitors = {"User1", "User2", "User3", "User1", "User2"};
+    cout << "Unique Visitors: ";
+    for (auto it = visitors.begin(); it != visitors.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    // 5. MAP: Employee salary mapping
+    map<string, double> salaries;
+    salaries["Alice"] = 50000;
+    salaries["Bob"] = 60000;
+    salaries["Charlie"] = 70000;
+    cout << "Employee Salaries: ";
+    for (auto it = salaries.begin(); it != salaries.end(); ++it) {
+        cout << "[" << it->first << ": $" << it->second << "] ";
+    }
+    cout << endl;
+
+    return 0;
+}
