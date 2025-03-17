@@ -1,0 +1,144 @@
+A base class Player has two derived classes:
+
+Batsman → Represents a cricket batsman.
+Bowler → Represents a cricket bowler.
+Each subclass overrides displayInfo() to provide specific details.
+Implementation
+cpp
+Copy
+Edit
+#include <iostream>
+using namespace std;
+
+// Base Class
+class Player {
+protected:
+    string name;
+public:
+    Player(string n) : name(n) {}
+    virtual void displayInfo() = 0; // Pure Virtual Function
+    virtual ~Player() {}
+};
+
+// Derived Class: Batsman
+class Batsman : public Player {
+private:
+    int runs;
+public:
+    Batsman(string n, int r) : Player(n), runs(r) {}
+    void displayInfo() override {
+        cout << "Batsman: " << name << ", Runs: " << runs << endl;
+    }
+};
+
+// Derived Class: Bowler
+class Bowler : public Player {
+private:
+    int wickets;
+public:
+    Bowler(string n, int w) : Player(n), wickets(w) {}
+    void displayInfo() override {
+        cout << "Bowler: " << name << ", Wickets: " << wickets << endl;
+    }
+};
+
+int main() {
+    Player* players[2]; // Array of pointers to base class
+
+    players[0] = new Batsman("Virat Kohli", 12000);
+    players[1] = new Bowler("Jasprit Bumrah", 250);
+
+    cout << "Player Details:\n";
+    for (int i = 0; i < 2; i++) {
+        players[i]->displayInfo();
+    }
+
+    // Cleanup
+    for (int i = 0; i < 2; i++) {
+        delete players[i];
+    }
+
+    return 0;
+}
+Key Concepts:
+displayInfo() is a pure virtual function in Player (making Player an abstract class).
+Batsman and Bowler override displayInfo().
+Runtime polymorphism achieved using base class pointers.
+Dynamic memory allocation (new and delete) to manage objects.
+2. Shape Example (Using Polymorphism)
+A base class Shape has two derived classes:
+
+Circle → Represents a circle with radius.
+Rectangle → Represents a rectangle with width and height.
+Each subclass overrides area() to provide specific implementations.
+Implementation
+cpp
+Copy
+Edit
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Base Class
+class Shape {
+public:
+    virtual double area() = 0; // Pure Virtual Function
+    virtual void display() = 0;
+    virtual ~Shape() {}
+};
+
+// Derived Class: Circle
+class Circle : public Shape {
+private:
+    double radius;
+public:
+    Circle(double r) : radius(r) {}
+    double area() override {
+        return M_PI * radius * radius;
+    }
+    void display() override {
+        cout << "Circle with radius " << radius << " has area: " << area() << endl;
+    }
+};
+
+// Derived Class: Rectangle
+class Rectangle : public Shape {
+private:
+    double width, height;
+public:
+    Rectangle(double w, double h) : width(w), height(h) {}
+    double area() override {
+        return width * height;
+    }
+    void display() override {
+        cout << "Rectangle with width " << width << " and height " << height << " has area: " << area() << endl;
+    }
+};
+
+int main() {
+    Shape* shapes[2]; // Array of pointers to base class
+
+    shapes[0] = new Circle(5.0);
+    shapes[1] = new Rectangle(4.0, 6.0);
+
+    cout << "Shape Details:\n";
+    for (int i = 0; i < 2; i++) {
+        shapes[i]->display();
+    }
+
+    // Cleanup
+    for (int i = 0; i < 2; i++) {
+        delete shapes[i];
+    }
+
+    return 0;
+}
+Key Concepts:
+Shape is an abstract class (due to area() being pure virtual).
+Circle and Rectangle override area() and display().
+Dynamic polymorphism: Base class pointers point to derived class objects.
+Uses delete to prevent memory leaks.
+Summary
+Example	Base Class	Derived Classes	Polymorphism Type
+Player	Player	Batsman, Bowler	Function overriding with displayInfo()
+Shape	Shape	Circle, Rectangle	Function overriding with area()
